@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRATAX - Companies</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            transition: background 0.3s ease;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+        
+        .page-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .filters-section, .stats-row, .table-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+        
+        .filters-section:hover, .table-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px var(--shadow);
+        }
+        
+        .companies-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .companies-table th {
+            background: linear-gradient(135deg, var(--forsythia), var(--deep-saffron));
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .companies-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .companies-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .companies-table tbody tr:hover {
+            background: var(--bg-secondary);
+            transform: scale(1.01);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+    </head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NETRATAX Logo" class="navbar-logo">
+                <h1>NETRATAX</h1>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="/landing" class="nav-link">Home</a></li>
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/companies" class="nav-link active">Companies</a></li>
+                <li><a href="/analytics" class="nav-link">Analytics</a></li>
+                <li><a href="/upload" class="nav-link">Upload</a></li>
+                <li><a href="/chatbot" class="nav-link">Chatbox</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon-light">☀️</span>
+                    <span class="theme-icon-dark">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h2>Company Fraud Analysis</h2>
+            <p>Search and analyze individual companies for fraud risk using Graph Neural Networks</p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section fade-in" style="animation-delay: 0.2s;">
+            <div class="filter-group">
+                <label for="riskThreshold">Risk Threshold:</label>
+                <input type="range" id="riskThreshold" min="0" max="1" step="0.05" value="0.5">
+                <span id="thresholdValue">0.50</span>
+            </div>
+
+            <div class="filter-group">
+                <label for="locationFilter">Location:</label>
+                <select id="locationFilter" multiple>
+                    <option value="">All Locations</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="companySearch">Search Company ID:</label>
+                <input type="text" id="companySearch" placeholder="Enter company ID">
+            </div>
+
+            <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+            <button id="resetFilters" class="btn btn-secondary">Reset</button>
+        </div>
+
+        <!-- Statistics Row -->
+        <div class="stats-row fade-in" style="animation-delay: 0.3s;">
+            <div class="stat-box">
+                <span class="stat-label">Total Companies:</span>
+                <span class="stat-value" id="totalCompanies">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">High-Risk:</span>
+                <span class="stat-value" id="highRiskCount">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Medium-Risk:</span>
+                <span class="stat-value" id="mediumRiskCount">-</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Low-Risk:</span>
+                <span class="stat-value" id="lowRiskCount">-</span>
+            </div>
+        </div>
+
+        <!-- Companies Table -->
+        <div class="table-container fade-in" style="animation-delay: 0.4s;">
+            <h3 style="color: var(--text-primary); transition: color 0.3s ease;">High-Risk Companies</h3>
+            <table class="companies-table">
+                <thead>
+                    <tr>
+                        <th>Company ID</th>
+                        <th>Location</th>
+                        <th>Turnover</th>
+                        <th>Fraud Probability</th>
+                        <th>Risk Level</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="companiesTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Company Detail Modal -->
+        <div id="companyModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="companyDetail"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Tax Fraud Detection System | Powered by NETRATAX | Graph Neural Networks</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/companies.js') }}"></script>
+</body>
+</html>

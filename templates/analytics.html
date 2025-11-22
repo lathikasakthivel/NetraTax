@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRATAX - Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            transition: background 0.3s ease;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0 2rem;
+        }
+        
+        .page-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .analytics-stats, .charts-row, .chart-container, .info-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            color: var(--text-primary);
+        }
+        
+        .chart-container:hover, .info-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow);
+        }
+        
+        .charts-row {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--forsythia), var(--deep-saffron));
+            border-radius: 15px;
+            color: var(--white);
+        }
+        
+        .stat-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+    </head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NETRATAX Logo" class="navbar-logo">
+                <h1>NETRATAX</h1>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="/landing" class="nav-link">Home</a></li>
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/companies" class="nav-link">Companies</a></li>
+                <li><a href="/analytics" class="nav-link active">Analytics</a></li>
+                <li><a href="/upload" class="nav-link">Upload</a></li>
+                <li><a href="/chatbot" class="nav-link">Chatbox</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon-light">☀️</span>
+                    <span class="theme-icon-dark">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h2>Network Analytics</h2>
+            <p>Transaction network analysis and pattern detection powered by Graph Neural Networks</p>
+        </div>
+
+        <!-- Key Statistics -->
+        <div class="analytics-stats fade-in" style="animation-delay: 0.2s;">
+            <div class="stat-card">
+                <h4>Total Nodes</h4>
+                <p class="stat-number" id="totalNodes">-</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Edges</h4>
+                <p class="stat-number" id="totalEdges">-</p>
+            </div>
+            <div class="stat-card">
+                <h4>Network Density</h4>
+                <p class="stat-number" id="networkDensity">-</p>
+            </div>
+            <div class="stat-card">
+                <h4>Avg. Fraud Prob.</h4>
+                <p class="stat-number" id="avgFraudProb">-</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row fade-in" style="animation-delay: 0.3s; grid-template-columns: minmax(600px, 1fr) minmax(600px, 1fr); gap: 2rem; max-width: 100%;">
+            <div class="chart-container" style="min-height: 700px; padding: 2rem; width: 100%; max-width: none;">
+                <h3 style="color: var(--text-primary); transition: color 0.3s ease; margin-bottom: 1.5rem;">Top 10 Invoice Senders</h3>
+                <div id="topSendersChart" style="height: 650px; width: 100%;"></div>
+            </div>
+
+            <div class="chart-container" style="min-height: 700px; padding: 2rem; width: 100%; max-width: none;">
+                <h3 style="color: var(--text-primary); transition: color 0.3s ease; margin-bottom: 1.5rem;">Top 10 Invoice Receivers</h3>
+                <div id="topReceiversChart" style="height: 650px; width: 100%;"></div>
+            </div>
+        </div>
+
+
+        <!-- Information Panel -->
+        <div class="info-panel fade-in" style="animation-delay: 0.5s;">
+            <h3 style="color: var(--text-primary); transition: color 0.3s ease;">About GNN-Based Fraud Detection</h3>
+            <div class="info-content">
+                <p style="color: var(--text-primary); transition: color 0.3s ease;">
+                    <strong>How the Model Works:</strong>
+                </p>
+                <ul style="color: var(--text-primary); transition: color 0.3s ease;">
+                    <li><strong>Node Features:</strong> Company turnover, invoice sent/received counts</li>
+                    <li><strong>Edge Features:</strong> Invoice amounts, ITC claimed</li>
+                    <li><strong>Architecture:</strong> Graph Convolutional Network (3 layers)</li>
+                    <li><strong>Detection:</strong> Identifies anomalous patterns in transaction networks</li>
+                </ul>
+
+                <p style="color: var(--text-primary); transition: color 0.3s ease;">
+                    <strong>Fraud Patterns Detected:</strong>
+                </p>
+                <ul style="color: var(--text-primary); transition: color 0.3s ease;">
+                    <li>Shell company networks (rapid creation/dissolution)</li>
+                    <li>Circular invoice chains (money laundering)</li>
+                    <li>Disproportionate ITC claims</li>
+                    <li>Unusual transaction patterns</li>
+                    <li>Connected fraud rings</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Tax Fraud Detection System | Powered by NETRATAX | Graph Neural Networks</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+</body>
+</html>

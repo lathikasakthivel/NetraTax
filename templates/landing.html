@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRATAX - AI-Powered Tax Fraud Detection </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body data-theme="light">
+    <!-- Sticky Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NETRATAX Logo" class="navbar-logo">
+                <div class="logo">NETRATAX</div>
+                <span class="brand-tagline">AI Embedded Tax Fraud Detection</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="#ai-assistants" class="nav-link">Features</a></li>
+                <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="/analytics" class="nav-link">Analytics</a></li>
+                <li class="nav-item"><a href="/companies" class="nav-link">Companies</a></li>
+                <li class="nav-item"><a href="/upload" class="nav-link">Upload Data</a></li>
+                <li class="nav-item"><a href="/chatbot" class="nav-link">AI Chatbox</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon-light">☀️</span>
+                    <span class="theme-icon-dark">🌙</span>
+                </button>
+                <a href="/dashboard" class="nav-signin">Sign In</a>
+                <a href="/dashboard" class="btn-get-started">Get Started</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+            <div class="floating-shape shape-4"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-cta-buttons fade-up">
+                <a href="/dashboard" class="btn-primary-hero">Explore Dashboard</a>
+                <a href="/upload" class="btn-secondary-hero">Upload Data</a>
+            </div>
+        </div>
+        <div class="chat-bubble" id="chatBubble">
+            <div class="chat-icon">💬</div>
+            <span>Try our AI Chatbox!</span>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section class="ai-agents" id="ai-assistants">
+        <div class="container">
+            <h2 class="section-heading fade-in">Supercharge your fraud analytics with AI Agents.</h2>
+            <p class="section-subheading fade-in-delay">Intelligent automation powered by Graph Neural Networks that learns and adapts to detect fraud patterns in real-time.</p>
+            <div class="ai-card-container fade-in-delay-2">
+                <div class="ai-card">
+                    <div class="ai-card-glow"></div>
+                    <h3>AI is here to assist.</h3>
+                    <p>Our Graph Neural Network-powered AI continuously monitors transactions, detects anomalies, and provides actionable fraud insights in real-time.</p>
+                    <div class="ai-features">
+                        <div class="ai-feature-item">
+                            <span class="feature-icon">🧠</span>
+                            <span>Graph Neural Networks</span>
+                        </div>
+                        <div class="ai-feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <span>Real-time Detection</span>
+                        </div>
+                        <div class="ai-feature-item">
+                            <span class="feature-icon">🔍</span>
+                            <span>Pattern Recognition</span>
+                        </div>
+                        <div class="ai-feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Network Analysis</span>
+                        </div>
+                    </div>
+                    <div class="ai-cta">
+                        <a href="/chatbot" class="btn-ai-chat">Try AI Chatbox</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 360° View Section -->
+    <section class="view-360" id="intelligence">
+        <div class="orbital-circles">
+            <div class="orbit orbit-1"></div>
+            <div class="orbit orbit-2"></div>
+            <div class="orbit orbit-3"></div>
+        </div>
+        <div class="container">
+            <div class="intelligence-grid">
+                <div class="intel-card stagger-fade" style="animation-delay: 0.1s">
+                    <div class="intel-icon">📊</div>
+                    <h3>Invoice Analysis</h3>
+                    <p>Deep dive into every transaction with AI-powered pattern recognition</p>
+                </div>
+                <div class="intel-card stagger-fade" style="animation-delay: 0.2s">
+                    <div class="intel-icon">🔗</div>
+                    <h3>Network Mapping</h3>
+                    <p>Visualize complex vendor networks and detect fraud rings</p>
+                </div>
+                <div class="intel-card stagger-fade" style="animation-delay: 0.3s">
+                    <div class="intel-icon">🎯</div>
+                    <h3>Risk Scoring</h3>
+                    <p>Real-time risk assessment with machine learning models</p>
+                </div>
+                <div class="intel-card stagger-fade" style="animation-delay: 0.4s">
+                    <div class="intel-icon">📈</div>
+                    <h3>Predictive Analytics</h3>
+                    <p>Forecast potential fraud before it happens</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="key-features" id="features">
+        <div class="container">
+            <h2 class="section-heading fade-in">Powerful Features for Tax Fraud Detection</h2>
+            <p class="section-description fade-in-delay" style="text-align: center; margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto;">Comprehensive tools to detect, analyze, and prevent tax fraud using advanced AI technology</p>
+            <div class="features-grid">
+                <div class="feature-card fade-in" style="animation-delay: 0.1s">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">🔍</div>
+                    </div>
+                    <h3>Transaction Monitoring</h3>
+                    <p>Real-time monitoring of all transactions with automated anomaly detection and alert system</p>
+                    <a href="/analytics" class="feature-link">View Analytics →</a>
+                </div>
+                <div class="feature-card fade-in" style="animation-delay: 0.2s">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">🛡️</div>
+                    </div>
+                    <h3>Fraud Pattern Detection</h3>
+                    <p>Identify complex fraud patterns including circular transactions, shell companies, and tax evasion schemes</p>
+                    <a href="/companies" class="feature-link">Check Companies →</a>
+                </div>
+                <div class="feature-card fade-in" style="animation-delay: 0.3s">
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon">📊</div>
+                    </div>
+                    <h3>Risk Assessment</h3>
+                    <p>Automated risk scoring for companies and transactions using GNN-based predictive models</p>
+                    <a href="/dashboard" class="feature-link">View Dashboard →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productivity / Stats Section -->
+    <section class="productivity" id="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card fade-in" style="animation-delay: 0.1s">
+                    <div class="stat-icon">⚡</div>
+                    <h3>Real-time Analysis</h3>
+                    <p>Instant Fraud Detection</p>
+                </div>
+                <div class="stat-card fade-in" style="animation-delay: 0.2s">
+                    <div class="stat-icon">🎯</div>
+                    <h3>GNN-Powered</h3>
+                    <p>Graph Neural Networks</p>
+                </div>
+                <div class="stat-card fade-in" style="animation-delay: 0.3s">
+                    <div class="stat-icon">🔗</div>
+                    <h3>Network Analysis</h3>
+                    <p>Detect Fraud Rings</p>
+                </div>
+                <div class="stat-card fade-in" style="animation-delay: 0.4s">
+                    <div class="stat-icon">🧠</div>
+                    <h3>AI-Powered</h3>
+                    <p>Graph Neural Networks</p>
+                </div>
+            </div>
+            <div class="productivity-content">
+                <div class="productivity-image">
+                    <div class="image-placeholder">
+                        <div class="analysis-visualization">
+                            <div class="viz-node"></div>
+                            <div class="viz-node"></div>
+                            <div class="viz-node"></div>
+                            <div class="viz-connection"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cta-box">
+                    <h3>Start Detecting Tax Fraud Today</h3>
+                    <p>Experience how Graph Neural Networks transform tax fraud detection. Upload your data and get instant AI-powered insights.</p>
+                    <div class="cta-buttons">
+                        <a href="/dashboard" class="btn-watch">
+                            <span class="play-icon">▶</span>
+                            EXPLORE DASHBOARD
+                        </a>
+                        <a href="/upload" class="btn-upload-cta">Upload Your Data</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>
+

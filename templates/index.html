@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRATAX - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            transition: background 0.3s ease;
+        }
+        
+        .container {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0 2rem;
+        }
+        
+        .dashboard-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .dashboard-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px var(--shadow);
+            min-height: 420px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow);
+        }
+        
+        .chart-container h3 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .metrics-grid-single-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .metric-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--forsythia), var(--deep-saffron));
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow);
+        }
+        
+        .metric-card.metric-high-risk::before {
+            background: linear-gradient(90deg, var(--deep-saffron), #e74c3c);
+        }
+        
+        .metric-card.metric-fraud::before {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+        
+        .metric-card.metric-risk::before {
+            background: linear-gradient(90deg, var(--forsythia), var(--deep-saffron));
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .fade-in-delay-1 {
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.2s forwards;
+        }
+        
+        .fade-in-delay-2 {
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.4s forwards;
+        }
+        
+        .fade-in-delay-3 {
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.6s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    </head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="NETRATAX Logo" class="navbar-logo">
+                <h1>NETRATAX</h1>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="/landing" class="nav-link">Home</a></li>
+                <li><a href="/dashboard" class="nav-link active">Dashboard</a></li>
+                <li><a href="/companies" class="nav-link">Companies</a></li>
+                <li><a href="/analytics" class="nav-link">Analytics</a></li>
+                <li><a href="/upload" class="nav-link">Upload</a></li>
+                <li><a href="/chatbot" class="nav-link">Chatbox</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon-light">☀️</span>
+                    <span class="theme-icon-dark">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h2>Dashboard Overview</h2>
+            <p>Real-time fraud detection statistics and risk analysis powered by Graph Neural Networks</p>
+        </div>
+
+        <!-- Key Metrics - Single Row -->
+        <div class="metrics-grid-single-row">
+            <div class="metric-card fade-in">
+                <div class="metric-value">{{ total_companies }}</div>
+                <div class="metric-label">Total Companies</div>
+                <div class="metric-icon"></div>
+            </div>
+
+            <div class="metric-card metric-high-risk fade-in-delay-1">
+                <div class="metric-value">{{ high_risk_count }}</div>
+                <div class="metric-label">High-Risk Companies</div>
+                <div class="metric-icon"></div>
+            </div>
+
+            <div class="metric-card metric-fraud fade-in-delay-2">
+                <div class="metric-value">{{ fraud_count }}</div>
+                <div class="metric-label">Predicted Fraud Cases</div>
+                <div class="metric-icon"></div>
+            </div>
+
+            <div class="metric-card metric-risk fade-in-delay-3">
+                <div class="metric-value">{{ avg_risk }}</div>
+                <div class="metric-label">Average Risk Score</div>
+                <div class="metric-icon"></div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1: Fraud & Risk Distribution -->
+        <div class="charts-row">
+            <div class="chart-container fade-in">
+                <h3>Fraud Distribution</h3>
+                <div id="fraudDistributionChart"></div>
+            </div>
+
+            <div class="chart-container fade-in-delay-1">
+                <h3>Risk Score Distribution</h3>
+                <div id="riskDistributionChart"></div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2: Risk by Location -->
+        <div class="charts-row" style="grid-column: 1 / -1;">
+            <div class="chart-container fade-in-delay-2" style="grid-column: 1 / -1;">
+                <h3>Risk by Location</h3>
+                <div id="riskByLocationChart" style="height: 420px;"></div>
+            </div>
+        </div>
+
+        <!-- Charts Row 3: Turnover vs Risk -->
+        <div class="charts-row" style="grid-column: 1 / -1;">
+            <div class="chart-container fade-in-delay-3" style="grid-column: 1 / -1;">
+                <h3>Company Turnover vs Fraud Risk</h3>
+                <div id="turnoverVsRiskChart" style="height: 420px;"></div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard loading...');
+            setTimeout(() => {
+                loadFraudDistributionChart();
+                loadRiskDistributionChart();
+                loadRiskByLocationChart();
+                loadTurnoverVsRiskChart();
+            }, 300);
+        });
+        
+        // Handle window resize for responsive charts
+        window.addEventListener('resize', () => {
+            ['fraudDistributionChart', 'riskDistributionChart', 'riskByLocationChart', 'turnoverVsRiskChart'].forEach(id => {
+                if (document.getElementById(id)) {
+                    Plotly.Plots.resize(id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
