@@ -365,19 +365,6 @@ jupyter notebook eda.ipynb
    # Modify train_gnn.py to use DataLoader
    from torch_geometric.loader import DataLoader
    ```
-
----
-
-## 🐛 Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| ModuleNotFoundError | Run `pip install -r requirements.txt` in activated venv |
-| CUDA out of memory | Use CPU: set `CUDA_VISIBLE_DEVICES=""` or reduce batch size |
-| Graph data not found | Run `build_graph.py` after cleaning data |
-| Model weights not loading | Check `models/best_model.pt` exists |
-| Port 8501 already in use | Kill process: `lsof -ti:8501 \| xargs kill -9` |
-
 ---
 
 ## 📚 References & Research
@@ -396,20 +383,7 @@ jupyter notebook eda.ipynb
 
 ---
 
-## 🤝 Contributing & Next Steps
-
-**Potential Improvements:**
-
-1. ✅ Implement GAT (Graph Attention Networks)
-2. ✅ Add temporal dynamics (time-series invoice patterns)
-3. ✅ Multi-hop fraud prediction
-4. ✅ Ensemble methods combining multiple GNN models
-5. ✅ Real-time batch prediction for new companies
-6. ✅ Explainability (GNNExplainer for feature attribution)
-
----
-
-## 📄 License & Disclaimer
+## Disclaimer
 
 This project is developed for **SIH 2024 Hackathon** and educational purposes.
 
@@ -421,7 +395,7 @@ This project is developed for **SIH 2024 Hackathon** and educational purposes.
 
 ---
 
-## 📞 Support
+## Support
 
 For issues or questions:
 
@@ -431,11 +405,3 @@ For issues or questions:
 4. Ensure all dependencies are installed
 
 ---
-
-**Last Updated:** November 2025  
-**Status:** ✅ Production Ready  
-**Maintainers:** SIH 2024 Team
-
----
-
-🚀 **Happy Fraud Detection!**
